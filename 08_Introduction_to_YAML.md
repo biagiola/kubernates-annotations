@@ -1,0 +1,21 @@
+# Introduction to YAML
+
+This lecture introduces **YAML** and explains it as the core format you’ll use throughout the course, because most Kubernetes configuration is written in YAML. The instructor says that if you already know YAML you can skip, and if you’ve used formats like **XML** or **JSON** you’ll likely learn YAML quickly—but even if you haven’t, the upcoming exercises will help you get comfortable.
+
+At its core, a YAML file is a way to represent **data**, often **configuration data**. The lecture compares the same “list of servers” data expressed in XML, JSON, and YAML to show that they all represent the same information but YAML is usually more readable and less verbose.
+
+The instructor then builds YAML concepts step by step. The simplest form is a **key–value pair**, written as `key: value`. Examples are like `fruit: apple` or `vegetable: carrot`. A small but important rule is emphasized: the key and value are separated by a **colon followed by a space** (`:` then a space). YAML relies heavily on formatting.
+
+To represent an **array (list)**, you write a key followed by a colon (for example `fruits:`), and then each item appears on the next lines prefixed with a dash (`-`). The dash indicates “this is one element in the list.”
+
+A **dictionary** (also called a map/object) is used when you want to group multiple properties under one item. The lecture’s example is nutrition data for fruits: each fruit (like banana) has properties such as calories, fat, and carbs. In YAML, what makes these properties belong to the same dictionary is **indentation** (spaces). The instructor stresses that the properties of one item must be aligned with the **same number of spaces**, otherwise YAML interprets them as belonging somewhere else.
+
+That leads to one of the most important YAML lessons: **indentation controls structure**. The lecture shows a case where “banana” has `calories`, `fat`, and `carbs`, but if `fat` and `carbs` are indented more than `calories`, YAML treats them as if they are nested *under* `calories`—which doesn’t make logical sense here. This triggers a typical error message along the lines of “mapping values are not allowed here,” because YAML is telling you: a key like `calories` can either have a direct value (like `105`) *or* it can be a nested map, but not both at the same time. So consistent indentation isn’t just style—it determines whether your YAML is valid.
+
+After that, the instructor shows that YAML can represent complex structures like **lists of dictionaries** (and even dictionaries containing lists, and so on). For example, you can have a list of fruits where each fruit item is itself a dictionary containing nutrition information.
+
+A common confusion for beginners is *when to use a dictionary vs a list*, and the lecture explains it using a car example. A **single car** is one object with multiple properties (color, model, transmission, price), so it is naturally represented as a **dictionary**. If one property needs more detail—like splitting “model” into “name” and “year”—you can represent that as a **dictionary inside another dictionary** (nested dictionaries). If instead you want to store **multiple cars**, that’s a collection of similar items, so you use a **list**. If you only need the names, it can be a simple list of strings. But if you want full details for each car, you make it a **list of dictionaries**, where each list item is the car dictionary. This is the key pattern: *single object → dictionary; many objects → list; many objects with multiple properties → list of dictionaries.*
+
+Before moving to exercises, the instructor adds two important notes. First, **dictionaries are unordered collections**, meaning the order of properties doesn’t matter: two dictionaries with the same keys/values are considered equivalent even if the keys appear in a different order. Second, **lists are ordered collections**, meaning the order of items matters: if “apple” and “banana” swap positions, it is a different list. Finally, YAML supports comments: any line that starts with `#` is ignored as a **comment**.
+
+With those basics—key–value pairs, lists, dictionaries, nesting, and especially indentation rules—you’re ready to start the YAML exercises that the rest of the Kubernetes course will rely on.

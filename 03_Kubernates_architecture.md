@@ -1,0 +1,20 @@
+# Kubernates architecture
+
+Before setting up a Kubernetes cluster, the lecture introduces the basic architecture and the terms you’ll repeatedly see during installation and labs. It starts with the idea of a **node**: a physical or virtual machine where Kubernetes is installed. A node is essentially a **worker machine**, meaning it’s the place where Kubernetes will actually launch your containers. The instructor notes that worker nodes used to be called **“minions”**, so you may still hear that older term used interchangeably.
+
+A single node is not enough for production because if that machine fails, your application goes down. To address this, Kubernetes groups multiple nodes into a **cluster**, which is simply a set of nodes working together. With a cluster, if one node fails your application can still be served from the other nodes, and multiple nodes also help share load across machines.
+
+Once you have a cluster, you need a component that coordinates and manages it: keeping track of which nodes exist, monitoring them, and deciding what happens when a node fails (for example, moving workloads away from a failed node). That responsibility belongs to the **master** (often called the control plane). The master is also a machine with Kubernetes installed, but configured to “watch over” the cluster and perform the actual **orchestration** of containers across the worker nodes.
+
+When Kubernetes is installed, it isn’t a single piece of software; it’s a set of components with different roles. The lecture highlights these key ones:
+
+- The **API Server** is the front-end of Kubernetes. Management tools—like command-line clients—communicate with the cluster through the API Server.
+- **etcd** is a distributed, reliable **key–value store** that Kubernetes uses to store all cluster data (such as information about nodes, configuration, and state). In clusters with multiple masters, etcd stores cluster information in a distributed way and helps with coordination (including mechanisms like locks) to avoid conflicts between masters.
+- The **Scheduler** decides where work should run. It looks for newly created “work” (the lecture says containers) and assigns it to appropriate nodes.
+- **Controllers** are described as the “brain” of orchestration. They detect and respond to failures (nodes, containers, or endpoints going down) and trigger actions such as creating replacement containers to keep the desired state.
+- The **Container Runtime** is the software that actually runs containers. In this course it’s **Docker**, but the lecture mentions other runtimes exist (examples given: **rkt** and **CRI-O**).
+- **Kubelet** is an agent running on *each worker node*. It makes sure containers are running as expected on that node, reports health information to the master, and carries out actions requested by the master on that worker.
+
+After defining the components, the lecture explains how they are distributed between master and worker machines. Worker nodes are where containers run, so they must have a **container runtime** installed (Docker in this course) and they run **kubelet** to communicate with the master and execute the master’s instructions. The master node, on the other hand, is what it is mainly because it runs the **Kubernetes API Server**, and it also runs the **etcd** datastore, plus core control components like the **controller manager** (referred to as “control manager” in the lecture) and the **scheduler**. The instructor mentions there are additional components, but these are the essentials needed for the early understanding and installation steps.
+
+The lecture finishes by introducing the command-line tool **kubectl** (pronounced “kube control” and written as `kubectl`), which is used to deploy and manage applications and to query cluster status. For the first labs, you only need to remember a few commands: `kubectl run` to deploy an application, `kubectl cluster-info` to view cluster information, and `kubectl get nodes` to list the nodes in the cluster. The idea is that you’ll learn more kubectl commands later as new concepts are introduced.
