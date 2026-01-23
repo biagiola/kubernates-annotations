@@ -226,7 +226,3 @@ The instructor notes you may see an “error/warning” message during apply tha
 ## Key takeaways from the lab
 
 Pods are inspected and troubleshot primarily with `kubectl get pods`, `kubectl describe pod ...`, and `kubectl get pods -o wide`. Image pull failures are diagnosed via the **Events** section in `describe`. The lab also introduces a practical workflow: using `kubectl run ... --dry-run=client -o yaml` to quickly generate a starter YAML, saving it to a file, and then using `kubectl create -f` / `kubectl apply -f` to manage the pod declaratively.
-
-If you paste the exact question list from KodeKloud (sometimes wording differs slightly), I can mirror the numbering 1:1 exactly—but the commands above match what the instructor executed in this walkthrough.
-
-ChatGPT can make mistakes. Check important info.
