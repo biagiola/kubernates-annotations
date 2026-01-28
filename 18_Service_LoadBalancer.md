@@ -1,0 +1,15 @@
+# Service: LoadBalancer
+
+This lecture introduces the third major Kubernetes Service type: **`LoadBalancer`**, and explains why it exists as a more user-friendly way to expose applications externally—especially on cloud platforms.
+
+The instructor starts from what you already learned with **NodePort**. With NodePort, you can expose an external-facing app by opening a high port on the worker nodes and forwarding traffic to the Pods. In the example, the front-end applications are things like a **voting app** and a **result app**. Imagine a **four-node cluster**: if you create NodePort Services for both apps, each app becomes reachable through the **IP address of any node + the NodePort**. That means users could access the voting app through *four different IP:port combinations* (one per node), and similarly four IP:port combinations for the result app. A key detail the instructor emphasizes is that even if the Pods for an app are only running on some of the nodes (for example, voting app Pods only on nodes with IPs “70 and 71”), the Service is still exposed on the NodePort across **all nodes** in the cluster, so it remains reachable via every node’s IP.
+
+Technically this works, but it’s not what end users want. Users don’t want to memorize or use multiple IP-and-port URLs. They want a **single stable URL** like `votingapp.com` (a friendly DNS name) to access the application.
+
+One option is to set up your own external load balancer: you could create a separate VM, install a load balancer like **HAProxy** or **Nginx**, and configure it to route traffic to the Kubernetes nodes. But the instructor points out that this approach becomes tedious because you must set it up yourself and then maintain it over time.
+
+This is where **Service type `LoadBalancer`** becomes valuable—*but mainly in supported cloud environments*. On cloud providers such as **GCP, AWS, and Azure**, Kubernetes can integrate with the cloud’s **native load balancer**. Instead of you provisioning and managing an external LB manually, you simply change the Service type from `NodePort` to `LoadBalancer`, and Kubernetes will automatically trigger the cloud provider integration to provision/configure an external load balancer and route traffic to your service.
+
+A crucial limitation is also stated: **this only works as intended on supported cloud platforms**. If you set `type: LoadBalancer` in an unsupported environment (like **VirtualBox** or other local/on-prem setups without a cloud load balancer integration), Kubernetes will not magically create an external load balancer. In that case, it effectively behaves like NodePort: the service still gets exposed on a high node port across the nodes, but there is **no external cloud load balancer provisioned**.
+
+The instructor closes by noting that later, when the course demos deploying applications on cloud platforms, you’ll see the LoadBalancer behaviour in action.
